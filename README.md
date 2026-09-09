@@ -13,9 +13,9 @@ None of this uses the PSP's GPU, because it cannot do any of it — it is a
 fixed-function unit from 2004 that textures triangles. Every ray is followed in
 software on the 333 MHz MIPS Allegrex CPU.
 
-The scene is traced at 120x68 and each pixel is written as a 4x4 block, filling
-480x272 exactly. That is the only way the frame rate reaches double digits, and
-the resulting chunkiness is the point rather than a defect.
+The scene is traced at 240x136 — half the screen in each direction — and each
+traced pixel is written as a 2x2 block, filling 480x272 exactly. One ray covers
+four pixels.
 
 ## Measured
 
@@ -23,9 +23,13 @@ the resulting chunkiness is the point rather than a defect.
 
 | | |
 |---|---|
-| Frame rate | 16.8 fps |
-| Per frame | 59.5 ms |
-| Traced resolution | 120x68, scaled 4x |
+| Frame rate | 4.24 fps |
+| Per frame | 235.8 ms |
+| Traced resolution | 240x136, scaled 2x |
+
+Cost is linear in the number of rays, with nothing else worth measuring: at
+120x68 the same scene runs at 16.82 fps, and four times the rays gives 4.24,
+against 4.20 predicted.
 
 That number is emulated time, not a hardware measurement. PPSSPP is not
 cycle-accurate, so treat it as a regression signal rather than a prediction of

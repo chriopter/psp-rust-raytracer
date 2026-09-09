@@ -5,9 +5,9 @@
 //! PSP's GPU cannot do any of this: it is a fixed-function unit that textures
 //! triangles, so every ray here is followed in software on the CPU.
 //!
-//! The scene is traced at a quarter of the screen's resolution and each pixel
-//! is written as a 4x4 block, which is why it looks like 1997. That is the
-//! only way the frame rate reaches double digits.
+//! The scene is traced at half the screen's resolution in each direction and
+//! each traced pixel is written as a 2x2 block, which fills 480x272 exactly.
+//! Tracing every pixel would quadruple the work again for a screen this size.
 //!
 //! After `FRAMES` frames it writes ms0:/raytracer-result.json and exits, so
 //! that psp-devloop can decide whether the run passed instead of a person
@@ -21,10 +21,11 @@ use psp::{BUF_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH};
 
 psp::module!("psp_raytracer", 1, 0);
 
-/// Traced resolution. Scaled up by `SCALE` to exactly fill 480x272.
-const RENDER_W: usize = 120;
-const RENDER_H: usize = 68;
-const SCALE: usize = 4;
+/// Traced resolution. Scaled up by `SCALE` to exactly fill 480x272, so this is
+/// half the screen in each direction: one ray per 2x2 block of pixels.
+const RENDER_W: usize = 240;
+const RENDER_H: usize = 136;
+const SCALE: usize = 2;
 
 /// Frames to render before writing the result file and exiting.
 const FRAMES: u32 = 600;
