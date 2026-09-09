@@ -2,38 +2,98 @@
 
 A real-time ray tracer for the Sony PSP, written in Rust.
 
-![Four spheres over a checkerboard, traced on a PSP](docs/screenshot.png)
+![Four spheres over a checkerboard, ray traced on a PSP](docs/ray-traced.webp)
 
-Four spheres orbit over an infinite checkerboard. Every pixel follows a ray:
-one primary ray for the surface, one shadow ray towards the light, and one
-reflection bounce where the surface is mirrored. That is why the spheres appear
-in each other and upside down in the floor.
+Four spheres orbit over an infinite checkerboard. Every pixel of each sphere
+follows a ray: one for the surface, one towards the light for the shadow, and
+one bounce off the chrome sphere. That is why the spheres appear in each other,
+and why the checkerboard is legible in the mirrored one.
 
-None of this uses the PSP's GPU, because it cannot do any of it — it is a
-fixed-function unit from 2004 that textures triangles. Every ray is followed in
-software on the 333 MHz MIPS Allegrex CPU.
+The floor and the sky are not traced. They are drawn by the PSP's Graphics
+Engine, which is a fixed-function unit from 2004 that textures triangles and
+can do nothing else — but a perspective checkerboard and a vertical gradient
+are exactly what it was built for, and it does them for free. Tracing them was
+costing three quarters of every frame, because a floor pixel needs a shadow ray
+and a reflection ray and there is a great deal more floor than sphere.
 
-The scene is traced at 240x136 — half the screen in each direction — and each
-traced pixel is written as a 2x2 block, filling 480x272 exactly. One ray covers
-four pixels.
+So the CPU traces only the spheres, inside their projected silhouettes, and
+hands the result to the GE as a texture with the misses left transparent.
+
+## Two renderers, L and R
+
+![The same scene, rasterised](docs/rasterised.webp)
+
+The camera circles the scene once every twelve seconds, which is what makes the
+two distinguishable at all: watch the chrome sphere. The shoulder buttons switch
+between the renderers, and left alone the demo alternates every six seconds.
+
+The scene, the camera and the resolution are identical, and the two pictures are
+close enough that the coloured bar in the corner is there to say which one is
+running.
+
+**Ray traced** is the animation at the top: every sphere pixel follows real
+rays, so the reflected checkerboard slides across the chrome as the camera goes
+round. 30.8 fps of work, presented at 26.6.
+
+**Rasterised** replaces the tracing with triangles — and takes its shading from
+the ray tracer all the same, just earlier. Each sphere is traced once over every
+surface normal that can face the camera, and the answer, highlight and
+reflection included, goes into a 64x64 texture indexed by that normal. The GE
+then draws 1440 triangles per sphere and looks the answer up.
+
+Because the camera moves, one sphere's texture is re-traced every frame, so the
+reflections keep up. That costs 12.1 ms of the 16.7 ms a frame has, and the
+result is a locked 60 fps against the ray tracer's 26.6.
+
+Ray traced at load time, rasterised at run time. What it gives up is a quarter
+of a second of lag in the reflections, and silhouettes that are polygons up
+close. Everything else survives, which is the surprising part.
 
 ## Measured
 
-600 frames under PPSSPP, timed by the PSP's own real-time clock:
+300 frames under PPSSPP, timed by the PSP's own clock:
 
-| | |
+| | Ray traced | Rasterised |
+|---|---|---|
+| Presented | 26.6 fps | 58.8 fps |
+| Work per frame | 32.4 ms | 12.1 ms |
+| Resolution | 480x272 native | 480x272 native |
+
+Two frame rates, because they mean different things. Waiting for vertical blank
+means a frame lasts a whole number of 16.68 ms intervals, so the *presented*
+rate can only ever be 60/n — 60, 30, 20, 15. There is no such thing as 24 fps
+on this machine; 26.6 is frames alternating between two and three intervals.
+The *work* figure is what the renderer actually costs, and it is the number
+that moves when the code gets faster.
+
+Both are emulated time. PPSSPP is not cycle-accurate, so treat them as a
+regression signal rather than a prediction for real hardware.
+
+### How it got there
+
+Starting from a full-screen traced image at 120x68 upscaled 4x:
+
+| Change | fps |
 |---|---|
-| Frame rate | 4.24 fps |
-| Per frame | 235.8 ms |
-| Traced resolution | 240x136, scaled 2x |
+| Quarter resolution, everything traced | 16.8 |
+| Half resolution | 4.2 |
+| Hardware square root instead of `libm` | 6.7 |
+| Skip the shadow ray where the surface faces away | 7.1 |
+| Fade out distant floor reflections | 7.3 |
+| Native resolution, checkerboard temporal | 7.3 |
+| Reciprocal square root without a division | 7.9 |
+| **Floor and sky moved to the GE** | **8.2** |
+| Trace silhouettes rather than bounding boxes | 12.3 |
+| No shadow ray inside a reflection | 13.2 |
+| Trace every other pixel, interpolate between | 20.0 |
+| Sky-only reflection for the matte spheres | 27.7 |
+| Cheaper floor parity, exact normals | 28.9 |
+| Skip bound and floor tests on primary rays | 30.8 |
 
-Cost is linear in the number of rays, with nothing else worth measuring: at
-120x68 the same scene runs at 16.82 fps, and four times the rays gives 4.24,
-against 4.20 predicted.
-
-That number is emulated time, not a hardware measurement. PPSSPP is not
-cycle-accurate, so treat it as a regression signal rather than a prediction of
-what a real PSP would do.
+The lesson in that table is the bold line and the two below it. Six rounds of
+arithmetic micro-optimisation bought 1.9x between them; asking what needed to
+be traced at all bought 3.8x. Every estimate made before measuring was too
+optimistic, most by a factor of three.
 
 ## Building
 
