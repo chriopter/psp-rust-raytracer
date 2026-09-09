@@ -1,0 +1,23 @@
+[package]
+name = "psp-raytracer"
+version = "0.1.0"
+edition = "2024"
+description = "A real-time ray tracer for the Sony PSP"
+license = "MIT"
+
+[dependencies]
+# The SDK, taken from the sibling checkout rather than crates.io: this demo
+# exists to exercise that fork against current nightlies, so it must build
+# against the working copy, not a published version.
+psp = { path = "../psp-rust/psp" }
+
+# Float math without std. Deliberately not psp::math, whose VFPU routines are
+# the subject of upstream issue #113: cosf32 there crashes on real hardware
+# while working in an emulator.
+libm = "0.2"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
