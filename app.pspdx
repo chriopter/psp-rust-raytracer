@@ -1,5 +1,5 @@
 {
-  "schema": "https://chriopter.github.io/pspdx/v1",
+  "schema": "https://github.com/chriopter/pspdx/blob/master/docs/manifest.md",
   "id": "io.github.chriopter.rustraytracer",
   "rev": 1789044630,
   "url": "https://github.com/chriopter/psp-rust-raytracer/releases/download/v0.1.0/psp-rust-raytracer.zip",
