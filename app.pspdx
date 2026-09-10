@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "id": "io.github.chriopter.rustraytracer",
+  "rev": 1789044630,
+  "url": "https://github.com/chriopter/psp-rust-raytracer/releases/download/v0.1.0/psp-rust-raytracer.zip",
+  "sha256": "958acfa02c94819fa4431f24402a9b3bea5135d9909d85d104c72a3b08392f31",
+  "size": 66204,
+  "requires": {
+    "ram_mb": 32
+  },
+  "display": {
+    "version": "0.1.0",
+    "notes": "First release listed in PSPDX."
+  }
+}
