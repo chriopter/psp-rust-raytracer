@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Starts the built EBOOT in PPSSPP without a desktop window, so the demo can be
-# run from a script or from psp-devloop.
+# run from a script.
 #
 # The emulator writes ms0:/raytracer-result.json into state/ppsspp/, which is
 # what the caller waits for. Nothing here decides whether the run passed; that

@@ -11,7 +11,7 @@
 //! most of the screen and a fraction of the cost.
 //!
 //! After `FRAMES` frames it writes ms0:/raytracer-result.json and exits, so
-//! that psp-devloop can decide whether the run passed instead of a person
+//! that a script can decide whether the run passed instead of a person
 //! having to watch the screen.
 
 #![no_std]
@@ -43,7 +43,7 @@ const ORBIT_RADIUS: f32 = 4.8;
 /// Frames to render in benchmark mode before writing the result and exiting.
 ///
 /// Without ms0:/benchmark the demo runs until the PSP is switched off, which is
-/// what you want when looking at it; with it, psp-devloop gets a run that ends
+/// what you want when looking at it; with it, a caller gets a run that ends
 /// by itself and a file with numbers in it.
 const FRAMES: u32 = 300;
 
@@ -1242,7 +1242,7 @@ fn put_milli(buf: &mut [u8], mut at: usize, milli: u64) -> usize {
     at + write_u64(&mut buf[at..], frac)
 }
 
-/// Writes the run's numbers where psp-devloop can find them. The frame rate is
+/// Writes the run's numbers where the caller can find them. The frame rate is
 /// carried as thousandths so that no float formatting is needed.
 fn write_result(
     frames: u32,

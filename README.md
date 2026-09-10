@@ -123,21 +123,15 @@ if PPSSPP is not on `PATH`. The demo renders 600 frames, writes
 `ms0:/raytracer-result.json` and exits, so a script can tell whether the run
 finished instead of a person having to watch it.
 
-## Continuous validation
+## A test as much as a toy
 
-```sh
-/path/to/psp-devloop/devloop psp-devloop.config
-```
+Building the demo, running it in the emulator and checking the result file
+exercises the floating-point paths and the display setup of the SDK against
+whatever nightly is installed, and `mipsel-sony-psp` is a Tier 3 target that
+nothing in the Rust project builds or tests.
 
-[psp-devloop](https://github.com/chriopter/psp-devloop) builds the demo, runs it
-in the emulator, waits for the result file and checks that all 600 frames were
-rendered. Which makes this demo a test as much as a toy: it exercises the
-floating-point paths and the display setup of the SDK against whatever nightly
-is installed, and `mipsel-sony-psp` is a Tier 3 target that nothing in the Rust
-project builds or tests.
-
-The hardware stage is deliberately empty — there is no PSP here, and a passing
-emulator stage is never evidence about hardware.
+None of that says anything about real hardware: there is no PSP here, and a
+passing emulator run is never evidence about one.
 
 ## Notes
 
