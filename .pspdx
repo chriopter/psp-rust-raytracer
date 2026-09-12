@@ -1,6 +1,6 @@
 {
   "schema": "https://github.com/chriopter/pspdx/blob/master/schema/v1.pspdx",
-  "repo": "https://github.com/chriopter/psp-rust-raytracer",
+  "source": "https://github.com/chriopter/psp-rust-raytracer",
   "name": "Rust Raytracer",
   "summary": "Real-time ray tracing and rasterisation side by side.",
   "category": "demo",
