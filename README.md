@@ -112,8 +112,16 @@ RUSTUP_TOOLCHAIN=nightly cargo psp --release
 The result is `target/mipsel-sony-psp/release/EBOOT.PBP`, which runs on a PSP
 with custom firmware or in an emulator.
 
-The app is listed in [PSPDX](https://github.com/chriopter/pspdx), the
-homebrew store for the PSP; the release's zip with the EBOOT is all it needs.
+## PSPDX
+
+The root `.pspdx` describes the app for [PSPDX](https://github.com/chriopter/pspdx)
+and sets its install directory to `PSP/GAME/RustRaytracer`. Version and download
+information come from the release. The icon, background picture and preview
+video live in `media/xmb/` and are packed into the EBOOT through `Psp.toml`;
+the catalog extracts them from there. No music is included.
+
+Pushing a `v*` tag builds the app and publishes a release with one ZIP
+containing the EBOOT and licence under `PSP/GAME/RustRaytracer/`.
 
 ## Running it without a screen
 
