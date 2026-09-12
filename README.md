@@ -113,8 +113,7 @@ The result is `target/mipsel-sony-psp/release/EBOOT.PBP`, which runs on a PSP
 with custom firmware or in an emulator.
 
 The app is listed in [PSPDX](https://github.com/chriopter/pspdx), the
-homebrew store for the PSP: `app.pspdx` in the root describes it, and the
-release workflow keeps the release half of that file current.
+homebrew store for the PSP; the release's zip with the EBOOT is all it needs.
 
 ## Running it without a screen
 

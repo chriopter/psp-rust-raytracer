@@ -64,7 +64,6 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: psp-rust-raytracer-${{ github.sha }}
@@ -73,8 +72,3 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "${GITHUB_REF_NAME}" dist/* --repo "${GITHUB_REPOSITORY}" --title "${GITHUB_REF_NAME}" --generate-notes
-      # A release made with GITHUB_TOKEN fires no release event, so the PSPDX
-      # action runs here, told the tag, and writes the release half of app.pspdx.
-      - uses: chriopter/pspdx/action@master
-        with:
-          tag: ${{ github.ref_name }}
