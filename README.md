@@ -1,4 +1,4 @@
-# PSP Raytracer
+# Rust Raytracer
 
 A real-time ray tracer for the Sony PSP, written in Rust.
 

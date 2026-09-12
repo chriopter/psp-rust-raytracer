@@ -1,6 +1,6 @@
 {
   "schema": "https://github.com/chriopter/pspdx/blob/master/schema/v1.pspdx",
-  "name": "PSP Raytracer",
+  "name": "Rust Raytracer",
   "summary": "Real-time ray tracing and rasterisation side by side.",
   "category": "demo",
   "license": "MIT",
