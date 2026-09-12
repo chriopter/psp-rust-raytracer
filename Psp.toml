@@ -1,2 +1,4 @@
 title = "PSP Raytracer"
 xmb_icon_png = "icon.png"
+xmb_icon_pmf = "icon1.pmf"
+xmb_background_png = "pic1.png"

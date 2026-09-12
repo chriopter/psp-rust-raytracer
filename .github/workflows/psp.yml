@@ -1,0 +1,80 @@
+name: PSP build
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  RUSTUP_TOOLCHAIN: nightly
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: psp-rust-raytracer
+      # Cargo.toml takes the psp crate from ../psp-rust, a sibling checkout of
+      # the SDK, so that the demo builds against the tree and not a published
+      # version. cargo-psp comes from the same tree, so the two always match.
+      - name: Check out the SDK beside the demo
+        uses: actions/checkout@v4
+        with:
+          repository: overdrivenpotato/rust-psp
+          path: psp-rust
+      - name: Install Rust nightly with rust-src
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: nightly
+          components: rust-src
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            psp-rust-raytracer
+            psp-rust/cargo-psp
+      - name: Install cargo-psp
+        run: cargo install --path psp-rust/cargo-psp
+      - name: Build EBOOT.PBP
+        working-directory: psp-rust-raytracer
+        run: cargo psp --release
+      - name: Package
+        working-directory: psp-rust-raytracer
+        run: |
+          rm -rf dist && mkdir -p dist/PSP/GAME/RustRaytracer
+          cp target/mipsel-sony-psp/release/EBOOT.PBP dist/PSP/GAME/RustRaytracer/
+          cp LICENSE dist/PSP/GAME/RustRaytracer/LICENSE.txt
+          (cd dist && zip -q -r -X psp-rust-raytracer.zip PSP)
+          rm -rf dist/PSP
+      - uses: actions/upload-artifact@v4
+        with:
+          name: psp-rust-raytracer-${{ github.sha }}
+          path: psp-rust-raytracer/dist/*
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: psp-rust-raytracer-${{ github.sha }}
+          path: dist
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" dist/* --repo "${GITHUB_REPOSITORY}" --title "${GITHUB_REF_NAME}" --generate-notes
+      # A release made with GITHUB_TOKEN fires no release event, so the PSPDX
+      # action runs here, told the tag, and writes the release half of app.pspdx.
+      - uses: chriopter/pspdx/action@master
+        with:
+          tag: ${{ github.ref_name }}

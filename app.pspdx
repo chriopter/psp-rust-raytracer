@@ -1,15 +1,17 @@
 {
-  "schema": "https://github.com/chriopter/pspdx/blob/master/manifest.md",
-  "id": "io.github.chriopter.rustraytracer",
-  "rev": 1789044630,
-  "url": "https://github.com/chriopter/psp-rust-raytracer/releases/download/v0.1.0/psp-rust-raytracer.zip",
-  "sha256": "958acfa02c94819fa4431f24402a9b3bea5135d9909d85d104c72a3b08392f31",
-  "size": 66204,
-  "requires": {
-    "ram_mb": 32
-  },
-  "display": {
-    "version": "0.1.0",
-    "notes": "First release listed in PSPDX."
-  }
+  "schema":   "https://github.com/chriopter/pspdx/blob/master/manifest.md",
+  "id":       "io.github.chriopter.rustraytracer",
+  "name":     "Rust Raytracer",
+  "author":   "chriopter",
+  "summary":  "Real-time ray tracing on a 333 MHz MIPS CPU.",
+  "category": "demos",
+  "license":  "MIT",
+  "repo":     "https://github.com/chriopter/psp-rust-raytracer",
+
+  "version":  "0.4.1",
+  "rev":      1789107335,
+  "url":      "https://github.com/chriopter/psp-rust-raytracer/releases/download/v0.4.1/ray.zip",
+  "sha256":   "a2f6c2c44b92e7483e720badd4d6cc4a76d2e38fff62bb625d29b8655d24a9c2",
+  "size":     86332,
+  "root":     "PSP/GAME/RustRaytracer/"
 }

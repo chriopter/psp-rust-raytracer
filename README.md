@@ -97,11 +97,11 @@ optimistic, most by a factor of three.
 
 ## Building
 
-Needs the [psp-rust](https://github.com/chriopter/psp-rust) SDK as a sibling
+Needs the [rust-psp](https://github.com/overdrivenpotato/rust-psp) SDK as a sibling
 checkout, a Rust nightly, and `cargo-psp`:
 
 ```sh
-git clone https://github.com/chriopter/psp-rust ../psp-rust
+git clone https://github.com/overdrivenpotato/rust-psp ../psp-rust
 cargo install --path ../psp-rust/cargo-psp
 rustup toolchain install nightly
 rustup component add rust-src --toolchain nightly
@@ -111,6 +111,10 @@ RUSTUP_TOOLCHAIN=nightly cargo psp --release
 
 The result is `target/mipsel-sony-psp/release/EBOOT.PBP`, which runs on a PSP
 with custom firmware or in an emulator.
+
+The app is listed in [PSPDX](https://github.com/chriopter/pspdx), the
+homebrew store for the PSP: `app.pspdx` in the root describes it, and the
+release workflow keeps the release half of that file current.
 
 ## Running it without a screen
 
