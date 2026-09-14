@@ -3,7 +3,7 @@
   "source": "https://github.com/chriopter/psp-rust-raytracer",
   "name": "Rust Raytracer",
   "summary": "Real-time ray tracing and rasterisation side by side.",
-  "category": "demo",
+  "tags": ["demo"],
   "license": "MIT",
   "installdir": "PSP/GAME/RustRaytracer"
 }
