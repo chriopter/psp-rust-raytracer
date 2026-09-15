@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: psp-rust-raytracer
       # Cargo.toml takes the psp crate from ../psp-rust, a sibling checkout of
       # the SDK, so that the demo builds against the tree and not a published
       # version. cargo-psp comes from the same tree, so the two always match.
       - name: Check out the SDK beside the demo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: overdrivenpotato/rust-psp
           path: psp-rust
@@ -51,7 +51,7 @@ jobs:
           cp LICENSE dist/PSP/GAME/RustRaytracer/LICENSE.txt
           (cd dist && zip -q -r -X psp-rust-raytracer.zip PSP)
           rm -rf dist/PSP
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: psp-rust-raytracer-${{ github.sha }}
           path: psp-rust-raytracer/dist/*
@@ -64,7 +64,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: psp-rust-raytracer-${{ github.sha }}
           path: dist
