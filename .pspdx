@@ -4,6 +4,7 @@
   "name": "Rust Raytracer",
   "summary": "Real-time ray tracing and rasterisation side by side.",
   "category": "demo",
+  "tags": ["unreleased"],
   "license": "MIT",
   "installdir": "PSP/GAME/RustRaytracer"
 }
